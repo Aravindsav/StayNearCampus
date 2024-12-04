@@ -30,13 +30,13 @@ const dbUrl = process.env.ATLASDB_URL;
 const store = MongoStore.create({
     
     mongoUrl:dbUrl,
-    cryto:{
+    crypto:{
         secret:process.env.SECRET,
     },
     touchAfter:24*3600,
 
 });
-store.on("error",()=>{
+store.on("error",(err)=>{
     console.log("ERROR in MONGO SESSION STORE",err);
 })
 
@@ -53,7 +53,7 @@ const sessionOptions={
 };
 
 
-app.use(session(sessionOptions));//used so that there is no need of relogining
+app.use(session(sessionOptions));//used so that there is no need of reloging
 app.use(flash());
 
 app.use(passport.initialize());
@@ -64,10 +64,20 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
+
+app.use((req,res,next)=>{
+    res.locals.success=req.flash("success");
+   res.locals.error=req.flash("error");
+  res.locals.currUser = req.user;
+   console.log("current user", req.user);
+    next();
+
+});
+
+
 const listingRouter =require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
-
 
 
 main().then(()=>{
@@ -79,19 +89,6 @@ async function main(){
     await mongoose.connect(dbUrl);
 }
 
- app.listen(8080,()=>{
-    console.log("server is started and is listening.")
- });
-
-
-app.use((req,res,next)=>{
-    res.locals.success=req.flash("success");
-   res.locals.error=req.flash("error");
-   res.locals.currUser = req.user;
-    next();
-
-
-});
 
 
 app.use("/listings",listingRouter);
@@ -107,3 +104,7 @@ app.use((err,req,res,next)=>{
     let {statusCode=500,message="Something went wrong"}=err;
     res.status(statusCode).render("error.ejs",{err});
 }); 
+
+app.listen(8080,()=>{
+    console.log("server is started and is listening.")
+ });
