@@ -108,3 +108,7 @@ app.use((err,req,res,next)=>{
 app.listen(8080,()=>{
     console.log("server is started and is listening.")
  });
+
+app.get('/', (req, res) => {
+  res.redirect('/login');
+});
