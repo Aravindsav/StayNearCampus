@@ -30,9 +30,7 @@ Wanderlust is a full-stack web application that allows users to explore, create,
 
 ---
 
-## 📸 Screenshots
 
-*(Add screenshots of your app here showing login, maps, listings, etc.)*
 
 ---
 
@@ -99,12 +97,6 @@ wanderlust/
 - 🤖 Optional ML-based price prediction or review sentiment analysis
 
 ---
-
-## 🧑‍💻 Author
-
-Built with ❤️ by [Your Name]  
-[LinkedIn](https://linkedin.com/in/yourprofile) | [Portfolio](https://your-portfolio.com)
-
 
  BackEnd and Databases:
  NodeJs
