@@ -2,7 +2,6 @@
 
 A Node.js + Express + MongoDB app to help students quickly find short-stay options **near campus**. Landlords can create/manage listings; students can browse, filter, and leave reviews. The UI is server-rendered with EJS and styled via Bootstrap.
 
-> Rename from “Wanderlust” → “StayNearCampus”, with new features like **amenities chips**, **distance filtering**, and **role-based access**.
 
 ---
 
