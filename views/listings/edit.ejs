@@ -1,68 +1,94 @@
 <% layout("/layouts/boilerplate.ejs") %>
-  <body>
-    <div class="row mt-3">
-      <div class="col-8 offset-2">
-    <h3>Edit your Listing</h3>
-    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
-      <div class="mb-3">
-        <label for="title" class="form-label" >Title</label>
-        <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" required >
-        <div class="invalid-feedback"> Please enter a suitable title</div>
-        <div class="valid-feedback">
-            Looks Good!
+<body>
+  <div class="row mt-3">
+    <div class="col-8 offset-2">
+      <h3>Edit your Listing</h3>
+
+      <form method="POST"
+            action="/listings/<%= listing._id %>?_method=PUT"
+            class="needs-validation"
+            novalidate
+            enctype="multipart/form-data">
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input name="listing[title]" id="title" value="<%= listing.title %>" type="text" class="form-control" required>
+          <div class="invalid-feedback">Please enter a suitable title</div>
+          <div class="valid-feedback">Looks Good!</div>
         </div>
-      </div>
-      
-     <div class="mb-3">
-      <label for="description" class="form-label" >Description</label>
-      <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
-      <div class="invalid-feedback"> Please enter a short description</div>
-     </div>
-      
-     <div class="mb-3">
-     Original Listing Image <br>
-     <img src="<%=originalImageUrl%>" alt="listing_image">
-</div>
 
-     <div class="mb-3">
-      <label for="Image" class="form-label" > Upload New Image </label>
-      <input name="listing[image]"  type="file"  class="form-control" />
-      
-     </div>
-     <div class="row">
-     <div class="mb-3 col-4">
-<label for="price" class="form-label"> Price</label>
-      <input name="listing[price]" value="<%= listing.price %>" type="number"  class="form-control" required/>
-      <div class="invalid-feedback"> Price should be valid </div>
-     </div>
-    
-  <div class="mb-3 col-8">
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea name="listing[description]" id="description" class="form-control" rows="4" required><%= listing.description %></textarea>
+          <div class="invalid-feedback">Please enter a short description</div>
+        </div>
 
-    <label for="country" class="form-label"> Country</label>
-    <input
-    name="listing[country]"
-    value="<%= listing.country %>"
-    type="text"
-    class="form-control"
-    required
-  />
-  <div class="invalid-feedback"> Country name should be valid </div>
-</div>
-  </div>
-  <div class="row">
-     <label for="location" class="form-label"> Location</label>
-      <input
-        name="listing[location]"
-        value="<%= listing.location %>"
-        type="text"
-        class="form-control"
-        required
-      />
-      <div class="invalid-feedback">Location should be valid</div>
+        <!-- Amenities (multi-select chips) -->
+        <div class="mb-3">
+          <label class="form-label d-block">Amenities</label>
+
+          <% const amenityOptions = [
+            'WiFi','Laundry','Meals','Air conditioning','Free Breakfast','Parking',
+            'Room service','Restaurant','Kid-friendly','Elevator/Lift','24-hour Room Service',
+            'Hot water','TV','Smoke Detector','First-aid Services'
+          ]; %>
+
+          <div class="d-flex flex-wrap gap-2">
+            <% amenityOptions.forEach((a, i) => { %>
+              <input
+                type="checkbox"
+                class="btn-check"
+                id="am<%= i %>"
+                name="listing[amenities][]"
+                value="<%= a %>"
+                <%= Array.isArray(listing.amenities) && listing.amenities.includes(a) ? 'checked' : '' %>
+                autocomplete="off"
+              >
+              <label class="btn btn-outline-primary" for="am<%= i %>"><%= a %></label>
+            <% }) %>
+          </div>
+          <div class="form-text">Select all that apply.</div>
+        </div>
+
+        <!-- Original image preview -->
+        <div class="mb-3">
+          Original Listing Image <br>
+          <img src="<%= originalImageUrl %>" alt="listing_image">
+        </div>
+
+        <!-- New image upload -->
+        <div class="mb-3">
+          <label for="image" class="form-label">Upload New Image</label>
+          <input name="listing[image]" id="image" type="file" class="form-control" accept="image/*">
+        </div>
+
+        <div class="row">
+          <!-- Price -->
+          <div class="mb-3 col-4">
+            <label for="price" class="form-label">Price</label>
+            <input name="listing[price]" id="price" value="<%= listing.price %>" type="number" min="0" step="1" class="form-control" required>
+            <div class="invalid-feedback">Price should be valid</div>
+          </div>
+
+          <!-- Country -->
+          <div class="mb-3 col-8">
+            <label for="country" class="form-label">Country</label>
+            <input name="listing[country]" id="country" value="<%= listing.country %>" type="text" class="form-control" required>
+            <div class="invalid-feedback">Country name should be valid</div>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input name="listing[location]" id="location" value="<%= listing.location %>" type="text" class="form-control" required>
+          <div class="invalid-feedback">Location should be valid</div>
+        </div>
+
+        <button class="btn btn-dark edit-btn mt-3 mb-3">Edit</button>
+      </form>
     </div>
-      <button class="btn btn-dark edit-btn mt-3 mb-3">Edit</button>
-    </form>
-   
   </div>
-</div>
 </body>

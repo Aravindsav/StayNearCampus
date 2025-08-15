@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
-const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const {data:sampleListings} = require("./data.js")
+
+
+
+const MONGO_URL = "mongodb+srv://Aravind:chinna2004@cluster0.oao2y.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+
 
 main().then(()=>{
     console.log("connection of DB is succesful");
@@ -13,10 +18,9 @@ async function main(){
     await mongoose.connect(MONGO_URL);
 }
 const initDB = async ()=>{
-await Listing.deleteMany({});
-initData.data = initData.data.map((obj)=>({ ...obj,owner:"671dd8787b9dd019dad0bd57"}))
-await Listing.insertMany(initData.data);
-console.log("data was initialised");
+  await Listing.deleteMany({});
+await Listing.insertMany(sampleListings)
+console.log("Sample listings inserted successfully");
 }
 
 initDB();

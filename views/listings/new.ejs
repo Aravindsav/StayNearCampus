@@ -1,56 +1,89 @@
+<% layout("/layouts/boilerplate.ejs") %>
 
-<% layout("/layouts/boilerplate.ejs")%>
 <div class="row">
-    <div class="col-8 offset-2">
-<body>
+  <div class="col-8 offset-2">
+
     <br><br>
     <h3>Create a new Listing</h3>
-   
-    <form method="POST" action = "/listings"  class="needs-validation" novalidate enctype="multipart/form-data">
-        <div class="mb-3">
-            <lable for="title" class="form-label">Title</lable>
-            <input name = "listing[title]" placeholder="enter title" type="text" class="form-control" required >
-            <div class="invalid-feedback"> Please enter a suitable title</div>
-            <div class="valid-feedback">
-                Looks Good!
-            </div>
-        </div>
-        
-   <div class="mb-3">
-    <lable for="description" class="form-label">Description</lable>
-    <textarea name = "listing[description]" class="form-control" required ></textarea>
-    <div class="invalid-feedback"> Please enter a short description</div>
-   </div>
-   
-   
-    <div class="mb-3">
-        <lable for="image" class="form-label">Upload Listing Image</lable>
-        <input name = "listing[image]" placeholder="enter image URL/Link" class="form-control" type="file" required>
-    </div>
-    <div class="row">
-    <div class="mb-3 col-md-4">
-        <lable for="price" class="form-label">Price</lable>
-        <input name = "listing[price]" placeholder="enter price"  class="form-control" required >
-        <div class="invalid-feedback"> Price should be valid </div>
-    </div> 
 
-    <div class="mb-3 col-md-8">
-        <lable for="country" class="form-label">Country</lable>
-        <input type="text" name = "listing[country]" placeholder="enter country" class="form-control"required >
-        <div class="invalid-feedback"> Country name should be valid </div>
-    </div>
-</div>
-    <div class="mb-3">
-        <lable for="location" class="form-label">Location</lable>
-        <input type="text" name ="listing[location]" placeholder="enter location" class="form-control" required>
+  
+    <form method="POST" action="/listings" class="needs-validation" novalidate enctype="multipart/form-data">
+
+      <!-- Title -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input name="listing[title]" id="title" placeholder="Enter title" type="text" class="form-control" required>
+        <div class="invalid-feedback">Please enter a suitable title</div>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="listing[description]" id="description" class="form-control" rows="4" placeholder="Briefly describe the place" required></textarea>
+        <div class="invalid-feedback">Please enter a short description</div>
+      </div>
+
+      <!-- Amenities (multi-select chips) -->
+      <div class="mb-3">
+        <label class="form-label d-block">Amenities</label>
+
+        <% const amenityOptions = [
+          'WiFi','Laundry','Meals','Air conditioning','Free Breakfast','Parking',
+          'Room service','Restaurant','Kid-friendly','Elevator/Lift','24-hour Room Service',
+          'Hot water','TV','Smoke Detector','First-aid Services'
+        ]; %>
+
+        <div class="d-flex flex-wrap gap-2">
+          <% amenityOptions.forEach((a, i) => { %>
+            <input
+              type="checkbox"
+              class="btn-check"
+              id="am<%= i %>"
+              name="listing[amenities][]"
+              value="<%= a %>"
+              autocomplete="off"
+            >
+            <label class="btn btn-outline-primary" for="am<%= i %>"><%= a %></label>
+          <% }) %>
+        </div>
+
+        <div class="form-text">Select all that apply.</div>
+      </div>
+
+      <!-- Image -->
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload Listing Image</label>
+        <input name="listing[image]" id="image" class="form-control" type="file" accept="image/*" required>
+        <div class="invalid-feedback">Please upload an image</div>
+      </div>
+
+      <div class="row">
+        <!-- Price -->
+        <div class="mb-3 col-md-4">
+          <label for="price" class="form-label">Price (₹)</label>
+          <input name="listing[price]" id="price" type="number" min="0" step="1" placeholder="Enter price" class="form-control" required>
+          <div class="invalid-feedback">Price should be a valid number</div>
+        </div>
+
+        <!-- Country -->
+        <div class="mb-3 col-md-8">
+          <label for="country" class="form-label">Country</label>
+          <input type="text" name="listing[country]" id="country" placeholder="Enter country" class="form-control" required>
+          <div class="invalid-feedback">Country name should be valid</div>
+        </div>
+      </div>
+
+      <!-- Location (used for geocoding) -->
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" name="listing[location]" id="location" placeholder="e.g., Hanamkonda, Warangal" class="form-control" required>
         <div class="invalid-feedback">Location should be valid</div>
-       </div>
-    <br>
-    <br>
-    <button class="btn btn-dark add-btn"> Add</button>
-    <br>
-    <br>
-</form>
-</body>
-</div>
+      </div>
+
+      <br>
+      <button class="btn btn-dark add-btn">Add</button>
+      <br><br>
+    </form>
+  </div>
 </div>

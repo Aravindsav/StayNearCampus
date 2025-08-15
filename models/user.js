@@ -7,6 +7,11 @@ const userSchema = new Schema({
     email:{
         type:String,
         required:true
+    },
+    role:{
+        type:String,
+        enum:['student','landlord'],
+        default:'student',
     }
 });
 // the hashing algorithm we are implementing is pbkdf2
