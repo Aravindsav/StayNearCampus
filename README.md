@@ -158,6 +158,3 @@ If you’ve got ideas or find bugs, feel free to open an issue or PR. Even a qui
 
 ---
 
-## License
-
-MIT — use it, tweak it, ship it. A little credit back would be lovely. :)
