@@ -1,224 +1,145 @@
 # StayNearCampus
 
-A Node.js + Express + MongoDB app to help students quickly find short-stay options **near campus**. Landlords can create/manage listings; students can browse, filter, and leave reviews. The UI is server-rendered with EJS and styled via Bootstrap.
+StayNearCampus is a small web app I’m building to make it easier for students to find short-stay places **near campus** (hotels/hostels/apartments) without getting lost in a million tabs. Landlords can post listings, students can browse, filter, and leave reviews. It’s simple, fast, and does the basics really well.
 
-
----
-
-## ✨ Features
-
-- **Listings CRUD** (create/edit/delete by landlords; view for everyone)
-- **Role-based access**
-  - `landlord`: can create, edit, delete *own* listings
-  - `student`: can browse and leave reviews
-- **Filters on index page**
-  - Price buckets (₹): `< 4000`, `4000–6000`, `6000–8000`, `≥ 8000`
-  - Distance from campus (via `$geoNear`): `< 500 m`, `0.5–1 km`, `1–3 km`, `> 3 km`
-  - Amenities (chip-style multi-select)
-- **Amenities input** (multi-select chips) on create/edit forms
-- **Map & Geocoding** (Mapbox): converts human location → GeoJSON Point
-- **2dsphere index** on `geometry` for geo queries
-- **Reviews** with rating (1–5) + comment; owners can delete their reviews
-- **Auth** with Passport (local strategy), secure sessions, flash messages
-- **Cloud uploads** (Multer + Cloudinary) for listing image
-- **Responsive UI** with Bootstrap 5
+> Formerly “Wanderlust” — I renamed and refocused it around campus stays, added amenity chips, distance filters, and proper role-based access.
 
 ---
 
-## 🧱 Tech Stack
+## Why this exists
 
-- **Server**: Node.js, Express, EJS (with ejs-mate layouts)
-- **Database**: MongoDB, Mongoose
-- **Auth**: Passport.js (passport-local-mongoose)
-- **Uploads**: Multer + Cloudinary
-- **Maps/Geo**: Mapbox Geocoding SDK, MongoDB `$geoNear`
-- **Validation**: Joi (server-side), Bootstrap (client)
-- **Sessions/Flash**: express-session, connect-mongo, connect-flash
+When you’re new to a city or visiting for exams/fests/admissions, finding a place *near* campus is the first headache. Most sites don’t let you filter by **distance from campus**. This one does — and puts the practical details (Wi‑Fi, laundry, breakfast, etc.) front and center.
 
 ---
 
-## 🚀 Getting Started
+## What it can do (right now)
 
-### 1) Clone & install
+- **Browse listings** with clean cards (no noisy descriptions on the index)
+- **Smart filters**:
+  - Price ranges (₹): `< 4000`, `4000–6000`, `6000–8000`, `≥ 8000`
+  - Distance from campus (`$geoNear`): `< 500 m`, `0.5–1 km`, `1–3 km`, `> 3 km`
+  - Amenities: WiFi, Laundry, Meals, AC, etc. (multi‑select chips)
+- **Role-based access** (Passport)
+  - **Landlords** can create, edit, and delete *their* listings
+  - **Students** can browse and leave reviews
+- **Reviews** with rating (1–5) + comments
+- **Map & Geocoding** via Mapbox (turns “Hanamkonda, Warangal” into coordinates)
+- **Image uploads** with Multer (plug in Cloudinary if you want CDN storage)
+
+Nice-to-haves on the list: better search, photos gallery, mobile tweaks, and a tiny admin panel.
+
+---
+
+## Tech stack (boring but useful)
+
+- **Node.js + Express** with **EJS** templates (using `ejs-mate` for layouts)
+- **MongoDB + Mongoose** (with a `2dsphere` index for geo queries)
+- **Passport (local)** for auth, **express-session** + **connect-mongo**
+- **Multer** (file uploads), **Cloudinary** (optional, for hosting images)
+- **Mapbox SDK** for geocoding
+- **Joi** for server-side validation
+- **Bootstrap 5** for quick styling
+
+---
+
+## Getting started
+
+### 1) Clone + install
 ```bash
 git clone https://github.com/<your-username>/StayNearCampus.git
 cd StayNearCampus
 npm install
 ```
 
-### 2) Environment variables
-Create a `.env` in the project root:
+### 2) Set up your `.env`
+Create a `.env` file in the project root:
 
 ```env
-# MongoDB
-ATLASDB_URL=mongodb+srv://<user>:<pass>@cluster0.xxxxx.mongodb.net/staynear
+
 
 # Sessions
 SECRET=supersecretstring
 
-# Mapbox (for geocoding & maps)
+# Mapbox (for geocoding & the map on the show page)
 MAP_TOKEN=pk.eyJ1Ijoi....your_mapbox_token....
 
-# Campus coordinates (optional overrides; defaults are for NIT Warangal)
+# Optional: override campus coords (defaults point to NIT Warangal)
 CAMPUS_LNG=79.5300
 CAMPUS_LAT=17.9784
 
-# Cloudinary (if you use cloud uploads)
+# Optional: Cloudinary if you want CDN image hosting
 CLOUDINARY_CLOUD_NAME=your_cloud
 CLOUDINARY_KEY=xxxxxxxxxxxx
 CLOUDINARY_SECRET=xxxxxxxxxxxx
 ```
 
-> **Never commit `.env`**. Ensure it’s in `.gitignore`.
+> Make sure `.env` is in your `.gitignore`.
 
-### 3) Development
+### 3) Run it
 ```bash
 npm run dev
 # or
 node app.js
 ```
-Visit: `http://localhost:8080`
+Open `http://localhost:8080`.
 
 ---
 
-## 🗂️ Project Structure (excerpt)
+## How the filters work (short version)
 
-```
-StayNearCampus/
-├─ app.js
-├─ /models
-│  ├─ listing.js
-│  └─ user.js
-├─ /controllers
-│  ├─ listings.js
-│  └─ users.js
-├─ /routes
-│  ├─ listing.js
-│  ├─ review.js
-│  └─ user.js
-├─ /utils
-│  ├─ schema.js         # Joi validation
-│  ├─ wrapAsync.js
-│  └─ ExpressError.js
-├─ /views
-│  ├─ /layouts/boilerplate.ejs
-│  ├─ /includes/navbar.ejs
-│  ├─ /listings
-│  │  ├─ index.ejs      # filters + cards (no description on cards)
-│  │  ├─ new.ejs        # amenities chips
-│  │  ├─ edit.ejs       # amenities chips (pre-checked)
-│  │  └─ show.ejs       # details + map + reviews
-│  └─ /users
-│     ├─ signup.ejs     # role select (student/landlord)
-│     └─ login.ejs
-└─ /public              # static assets
-```
+- I build a Mongo query from the form inputs (price, amenities).
+- If **distance** is chosen, I switch to an aggregation with **$geoNear** using your campus point (defaults can be changed via env). This adds a `distanceMeters` field and filters to the bucket you picked.
+- No distance filter? It’s a normal `find()` so even listings without coordinates still appear.
 
----
-
-## 🔐 Roles & Guards
-
-- **User model** has `role: 'student' | 'landlord'` (default `student`).
-- In views (`navbar.ejs`), show “Add Listing” when:
-  ```ejs
-  <% if (currUser && currUser.role === 'landlord') { %>
-    <a class="nav-link" href="/listings/new">Add Listing</a>
-  <% } %>
-  ```
-- Protect routes:
-  ```js
-  router.get('/listings/new', isLoggedIn, isLandlord, renderNewForm);
-  router.post('/listings',    isLoggedIn, isLandlord, upload.single('listing[image]'), createListing);
-  router.get('/listings/:id/edit', isLoggedIn, isLandlord, isListingOwnerOrAdmin, renderEditForm);
-  router.put('/listings/:id', isLoggedIn, isLandlord, isListingOwnerOrAdmin, updateListing);
-  router.delete('/listings/:id', isLoggedIn, isLandlord, isListingOwnerOrAdmin, destroyListing);
-  ```
-
----
-
-## 🧭 Filtering Logic (index)
-
-- Normalize amenities array from query (`amenities[]` or `amenities`)
-- Build Mongo filter `match` with `amenities?`, `price?`
-- If **distance** is selected → use `$geoNear` with campus point
-- Else → regular `.find(match)` so listings without `geometry` also show
-
-**Price buckets (no overlap):**
+Price buckets don’t overlap:
 ```js
-const priceMap = {
-  lt4000: { $lt: 4000 },
-  '4to6': { $gte: 4000, $lt: 6000 },
-  '6to8': { $gte: 6000, $lt: 8000 },
-  gt8000: { $gte: 8000 },
-};
+lt4000: { $lt: 4000 },
+'4to6': { $gte: 4000, $lt: 6000 },
+'6to8': { $gte: 6000, $lt: 8000 },
+gt8000: { $gte: 8000 },
 ```
 
-**Geo index required:**
+> Don’t forget: `ListingSchema.index({ geometry: '2dsphere' })` is required for `$geoNear`.
+
+---
+
+## Data model (roughly)
+
 ```js
-ListingSchema.index({ geometry: '2dsphere' });
+// models/listing.js
+{
+  title: String,
+  description: String,
+  price: Number,
+  country: String,
+  location: String,
+  image: { url: String, filename: String },
+  amenities: [String],
+  geometry: { type: { type: String }, coordinates: [Number] }, // GeoJSON Point
+  owner: ObjectId(User)
+}
+
+// models/user.js
+{
+  email: String,
+  role: { type: String, enum: ['student','landlord'], default: 'student' }
+  // passport-local-mongoose handles username + hash/salt
+}
 ```
 
 ---
 
-## ✅ Validation (Joi)
+## Common pitfalls (aka “gotchas I hit so you don’t have to”)
 
-`utils/schema.js` excerpt:
-```js
-const Joi = require('joi');
-const amenityItem = Joi.string().trim().max(50);
-
-module.exports.listingSchema = Joi.object({
-  listing: Joi.object({
-    title: Joi.string().trim().min(2).required(),
-    description: Joi.string().trim().min(10).required(),
-    location: Joi.string().trim().required(),
-    country: Joi.string().trim().required(),
-    price: Joi.number().min(0).required(),
-    amenities: Joi.array().items(amenityItem).single().default([]),
-  }).unknown(true).required(),
-});
-```
+- **Missing geo index** → `$geoNear` crashes. Add: `ListingSchema.index({ geometry: '2dsphere' })`.
+- **Amenities validation** → Allow it in Joi as `array().items(string()).single()`.
+- **Navbar role check** → Use `currUser && currUser.role === 'landlord'`, not a bare `role` variable.
+- **File uploads + Joi** → Don’t validate the file in Joi; Multer puts the file in `req.file`, not `req.body`.
+- **Signup role** → Make sure your signup form posts `name="role"` with `value="student" | "landlord"`.
 
 ---
 
-## 🖼️ Image Uploads
-
-Form field: `name="listing[image]"` → route uses:
-```js
-upload.single('listing[image]'); // Multer
-```
-After upload, set:
-```js
-listing.image = { url: req.file.path, filename: req.file.filename };
-```
-
----
-
-## 🗺️ Mapbox Geocoding
-
-On create/update (if location changes), geocode to GeoJSON:
-```js
-const geoResp = await geocodingClient
-  .forwardGeocode({ query: req.body.listing.location, limit: 1 })
-  .send();
-const feature = geoResp.body.features?.[0];
-if (feature) listing.geometry = feature.geometry;
-```
-
----
-
-## 🧪 Quick Dev Checklist
-
-- `.env` configured
-- `ListingSchema.index({ geometry: '2dsphere' })`
-- Navbar uses `currUser && currUser.role === 'landlord'`
-- Joi allows `listing.amenities`
-- Routes protected for landlords
-- Cloudinary/Mapbox keys valid
-
----
-
-## 📦 Scripts
+## Repository scripts
 
 ```json
 {
@@ -229,4 +150,14 @@ if (feature) listing.geometry = feature.geometry;
 }
 ```
 
+---
 
+## Contributing
+
+If you’ve got ideas or find bugs, feel free to open an issue or PR. Even a quick “this part was confusing” helps a lot.
+
+---
+
+## License
+
+MIT — use it, tweak it, ship it. A little credit back would be lovely. :)
