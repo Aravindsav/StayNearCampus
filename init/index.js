@@ -5,7 +5,7 @@ const {data:sampleListings} = require("./data.js")
 
 
 
-const MONGO_URL = "mongodb+srv://Aravind:chinna2004@cluster0.oao2y.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+const MONGO_URL = process.env.ATLASDB_URL;
 
 
 
