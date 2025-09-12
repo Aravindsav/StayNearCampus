@@ -23,10 +23,10 @@ module.exports.index = async (req, res) => {
     if (amenities.length) match.amenities = { $all: amenities };
     if (price) {
       const priceMap = {
-        lt4000: { $lt: 4000 },
-        "4to6": { $gte: 4000, $lte: 6000 },
-        "6to8": { $gte: 6000, $lte: 8000 },
-        gt8000: { $gt: 8000 },
+        lt1000: { $lt: 1000 },
+        "1to2": { $gte: 1000, $lte: 2000 },
+        "2to4": { $gte: 2000, $lte: 4000 },
+        gt4000: { $gt: 4000 },
       };
       if (priceMap[price]) match.price = priceMap[price];
     }

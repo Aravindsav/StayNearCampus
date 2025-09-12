@@ -20,10 +20,10 @@
           <label class="form-label fw-semibold">Price Range</label>
           <select class="form-select" name="price">
             <option value=""     <%= !query.price ? 'selected' : '' %>>Any</option>
-            <option value="lt4000" <%= query.price==='lt4000'?'selected':'' %>>&lt; ₹4000</option>
-            <option value="4to6"   <%= query.price==='4to6' ?'selected':'' %>>₹4000–₹6000</option>
-            <option value="6to8"   <%= query.price==='6to8' ?'selected':'' %>>₹6000–₹8000</option>
-            <option value="gt8000" <%= query.price==='gt8000'?'selected':'' %>>₹8000+</option>
+            <option value="lt4000" <%= query.price==='lt4000'?'selected':'' %>>&lt; ₹1000</option>
+            <option value="4to6"   <%= query.price==='4to6' ?'selected':'' %>>₹1000–₹2000</option>
+            <option value="6to8"   <%= query.price==='6to8' ?'selected':'' %>>₹2000–₹4000</option>
+            <option value="gt8000" <%= query.price==='gt8000'?'selected':'' %>>₹4000+</option>
           </select>
         </div>
 
