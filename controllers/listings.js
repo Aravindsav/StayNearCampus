@@ -20,7 +20,7 @@ module.exports.index = async (req, res) => {
     // ---- Non-geo filters ----
     const match = {};
     if (roomType) match.roomType = roomType;
-    if (amenities.length) match.amenities = { $in: amenities };
+    if (amenities.length) match.amenities = { $all: amenities };
     if (price) {
       const priceMap = {
         lt4000: { $lt: 4000 },
