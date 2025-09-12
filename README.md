@@ -10,7 +10,7 @@ StayNearCampus is a small web app I’m building to make it easier for students 
 
 When you’re new to a city or visiting for exams/fests/admissions, finding a place *near* campus is the first headache. Most sites don’t let you filter by **distance from campus**. This one does — and puts the practical details (Wi‑Fi, laundry, breakfast, etc.) front and center.
 
----
+---s
 
 ## What it can do (right now)
 

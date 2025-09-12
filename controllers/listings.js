@@ -4,7 +4,7 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
-// ----- Campus Coordinates (env overrideable) -----
+// ----- Campus Coordinates  -----
 const CAMPUS_LNG = Number(process.env.CAMPUS_LNG ?? 79.5300);
 const CAMPUS_LAT = Number(process.env.CAMPUS_LAT ?? 17.9784);
 
@@ -32,6 +32,7 @@ module.exports.index = async (req, res) => {
     }
 
     let allistings;
+    console.time("QueryResponseTime");// for measuring the start response time 
 
     // ---- Distance filter: only use $geoNear when distance is selected ----
     if (distance) {
@@ -61,6 +62,7 @@ module.exports.index = async (req, res) => {
       // No distance filter → plain find so listings without geometry also show
       allistings = await Listing.find(match).sort({ createdAt: -1 }).lean();
     }
+    console.timeEnd("QueryResponseTime");  // for measuring the end response time
 
     res.render("listings/index.ejs", { allistings, query: req.query });
   } catch (err) {
