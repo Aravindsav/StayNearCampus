@@ -16,7 +16,7 @@ When you’re new to a city or visiting for exams/fests/admissions, finding a pl
 
 - **Browse listings** with clean cards (no noisy descriptions on the index)
 - **Smart filters**:
-  - Price ranges (₹): `< 4000`, `4000–6000`, `6000–8000`, `≥ 8000`
+  - Price ranges (₹): `< 1000`, `1000–3000`, `3000–4000`, `≥ 4000`
   - Distance from campus (`$geoNear`): `< 500 m`, `0.5–1 km`, `1–3 km`, `> 3 km`
   - Amenities: WiFi, Laundry, Meals, AC, etc. (multi‑select chips)
 - **Role-based access** (Passport)
